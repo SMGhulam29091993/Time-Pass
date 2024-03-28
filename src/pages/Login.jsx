@@ -6,7 +6,7 @@ import { useFileHandler, useInputValidation, useStrongPassword } from "6pp";
 import { UsernameValidator } from '../utils/validator';
 
 const Login = () => {
-    const [isLogin, setIsLogin] = useState(false);
+    const [isLogin, setIsLogin] = useState(true);
 
     const toggleLogin =()=>setIsLogin(!isLogin);
 
@@ -41,7 +41,7 @@ const Login = () => {
                     display : "flex",
                     flexDirection : "column",
                     alignItems : "center",
-                    
+                    bgcolor : "inherit"                    
                 }}>
                     {isLogin?
                         <>
