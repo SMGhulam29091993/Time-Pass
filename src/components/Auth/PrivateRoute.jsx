@@ -5,7 +5,7 @@ const PrivateRoute = ({children, user, redirect}) => {
     if(!user){
         return <Navigate to={redirect}/>
     } 
-    return children?childrem : <Outlet/>; 
+    return children?children : <Outlet/>; 
 }
 
 export default PrivateRoute
