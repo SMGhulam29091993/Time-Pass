@@ -9,7 +9,7 @@ const AppLayout = () => (WrappedComponent) => {
         <>
             <Title/>
             <Header/>
-            <Grid container height={"calc(100vh - 4rem)"} >
+            <Grid container style={{ height: "calc(100vh - 4rem)" }} >
                 <Grid item sm={4} md={3} sx={{display: {xs :"none", sm:"block"}, bgcolor:"#E2EBAA"}} height={"100%"}>
                     First
                 </Grid>
