@@ -1,19 +1,35 @@
-import { AppBar, Box, IconButton, Toolbar, Tooltip, Typography } from '@mui/material'
-import React, { startTransition } from 'react'
-import { orange } from '../../constants/color'
-import { Menu as MenuIcon, Search as SearchIcon, Add as AddIcon, Group as GroupIcon} from '@mui/icons-material'
-import { useNavigate } from 'react-router-dom'
+import { AppBar, Box, IconButton, Toolbar, Tooltip, Typography } from '@mui/material';
+import React, { Suspense, lazy, startTransition, useState } from 'react';
+import { orange } from '../../constants/color';
+import { Menu as MenuIcon, Search as SearchIcon, Add as AddIcon, Group as GroupIcon, Notifications as NotificationIcon} from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
+
+
+const Search = lazy(()=>import("../specifics/Search"));
+const Notifications = lazy(()=>import("../specifics/Notifications"));
+const NewGroups = lazy(()=>import("../dialogues/NewGroups"));
+
 
 const Header = () => {
   const navigate = useNavigate();
+  const [isMobile,setIsMobile] = useState(false);
+  const [isSearch,setIsSearch] = useState(false);
+  const [isNewGroup, setIsNewGroup] = useState(false);
+  const [isNotification, setIsNotification] = useState(false);
+
+
   const handleMobile = ()=>{
-    console.log("Mobile");
+    setIsMobile((prev)=>!prev);
   }
   const openSearchDialogue = ()=>{
-    console.log("Search Dialogue Opened");
+    setIsSearch((prev)=>!prev);
   }
   const openNewGroup = ()=>{
-    console.log("New Group Opened");
+    setIsNewGroup((prev)=>!prev)
+  }
+
+  const openNotification = ()=>{
+    setIsNewGroup((prev)=>!prev)
   }
   const openManageGroup = ()=>{
     startTransition(()=>{
@@ -43,10 +59,14 @@ const Header = () => {
 
               <IconBtn title={"Manage Groups"} icon={<GroupIcon/>} onClick={openManageGroup}  />
               
+              <IconBtn title={"Notification Bell"} icon={<NotificationIcon/>} onClick={openNotification} />
             </Box>
           </Toolbar>
         </AppBar>
       </Box>
+      {isSearch && (
+        <Suspense fallback={<div>Loading....</div>}><Search/></Suspense>
+      )}
     </>
   )
 }
