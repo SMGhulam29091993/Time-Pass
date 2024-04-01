@@ -1,6 +1,6 @@
 import { AppBar, Box, IconButton, Toolbar, Tooltip, Typography } from '@mui/material';
 import React, { Suspense, lazy, startTransition, useState } from 'react';
-import { orange } from '../../constants/color';
+import { asparagus } from '../../constants/color';
 import { Menu as MenuIcon, Search as SearchIcon, Add as AddIcon, Group as GroupIcon, Notifications as NotificationIcon} from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
@@ -41,7 +41,7 @@ const Header = () => {
   return (
     <>
       <Box sx={{flexGrow: 1}} height={"4rem"}>
-        <AppBar position='static' sx={{bgcolor:orange}} >
+        <AppBar position='static' sx={{bgcolor:asparagus}} >
           <Toolbar>
             <Typography variant='h6' sx={{display:{xs:"none",sm:"block"}}}>Time-Pass</Typography>
           
@@ -66,6 +66,12 @@ const Header = () => {
       </Box>
       {isSearch && (
         <Suspense fallback={<div>Loading....</div>}><Search/></Suspense>
+      )}
+      {isNotification && (
+        <Suspense fallback={<div>Loading....</div>}><Notifications/></Suspense>
+      )}
+      {isNewGroup && (
+        <Suspense fallback={<div>Loading....</div>}><NewGroups/></Suspense>
       )}
     </>
   )
