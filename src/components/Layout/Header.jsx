@@ -29,7 +29,7 @@ const Header = () => {
   }
 
   const openNotification = ()=>{
-    setIsNewGroup((prev)=>!prev)
+    setIsNotification((prev)=>!prev)
   }
   const openManageGroup = ()=>{
     startTransition(()=>{

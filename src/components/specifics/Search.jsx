@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dialog, Stack, TextField, DialogTitle, InputAdornment, List, ListItem } from "@mui/material";
+import { Dialog, Stack, TextField, DialogTitle, InputAdornment, List} from "@mui/material";
 import { Search as SearchIcon } from "@mui/icons-material";
 import { useInputValidation } from "6pp";
 import UserItem from '../Shared/UserItem';
