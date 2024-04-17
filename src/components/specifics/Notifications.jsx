@@ -33,9 +33,9 @@ const NotificationItem = memo(({sender, _id, handler})=>{
           <Typography variant='body1' sx={{flexGrow : 1, display :"-webkit-box", WebkitLineClamp : 1, width:"100%", 
                           WebkitBoxOrient :"vertical", overflow: "hidden", textOverflow:"ellipsis"}} >
                               {sender.name} sent you a friend request</Typography>
-          <Stack direction={{xs:"column", sm:"row"}}>
-            <Button color='success' onClick={()=>handler({_id,accept:true})}>Accept</Button>
-            <Button color='error' onClick={()=>handler({_id,accept:false})}>Reject</Button>
+          <Stack direction={{xs:"column", sm:"row"}} spacing={1}>
+            <Button color='success' variant='contained' onClick={()=>handler({_id,accept:true})}>Accept</Button>
+            <Button color='error' variant='contained' onClick={()=>handler({_id,accept:false})}>Reject</Button>
           </Stack>
         </Stack>
       </ListItem>

@@ -1,7 +1,8 @@
 import { AppBar, Backdrop, Box, IconButton, Toolbar, Tooltip, Typography } from '@mui/material';
 import React, { Suspense, lazy, startTransition, useState } from 'react';
 import { asparagus } from '../../constants/color';
-import { Menu as MenuIcon, Search as SearchIcon, Add as AddIcon, Group as GroupIcon, Notifications as NotificationIcon} from '@mui/icons-material';
+import { Menu as MenuIcon, Search as SearchIcon, Add as AddIcon, Group as GroupIcon,
+     Notifications as NotificationIcon , ExitToApp as LogoutIcon} from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -36,8 +37,10 @@ const Header = () => {
       navigate("/groups");
       console.log("ManageGroup");
     })
-    
   }
+
+  const logoutHandler = ()=>{};
+
   return (
     <>
       <Box sx={{flexGrow: 1}} height={"4rem"}>
@@ -60,6 +63,8 @@ const Header = () => {
               <IconBtn title={"Manage Groups"} icon={<GroupIcon/>} onClick={openManageGroup}  />
               
               <IconBtn title={"Notification Bell"} icon={<NotificationIcon/>} onClick={openNotification} />
+
+              <IconBtn title={"Logout"} icon={<LogoutIcon/>} onClick={logoutHandler} />
             </Box>
           </Toolbar>
         </AppBar>
