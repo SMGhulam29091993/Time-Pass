@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Search = lazy(()=>import("../specifics/Search"));
 const Notifications = lazy(()=>import("../specifics/Notifications"));
-const NewGroups = lazy(()=>import("../dialogues/NewGroups"));
+const NewGroups = lazy(()=>import("../specifics/NewGroups"));
 
 
 const Header = () => {

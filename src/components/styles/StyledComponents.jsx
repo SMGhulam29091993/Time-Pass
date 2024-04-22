@@ -1,5 +1,6 @@
 import { styled } from "@mui/material";
 import {Link as LinkComponent} from "react-router-dom";
+import { gray } from "../../constants/color";
 
 
 
@@ -23,3 +24,14 @@ export const Link = styled(LinkComponent)`
         background-color : #f0f0f0;
     }
 `;
+
+
+export const InputBox = styled("input")`
+    height: 100%;
+    width : 100%;
+    outline : none;
+    border : 1px solid black;
+    padding: 0 3rem;
+    border-radius : 1.5rem;
+    background-color : ${gray};
+`

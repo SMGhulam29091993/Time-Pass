@@ -11,8 +11,9 @@ const ChatList = ({w="100%", chats=[], chatId, onlineUsers=[], newMessagesAlert=
             const newMessageAlert = newMessagesAlert.find(({chatId})=>chatId === _id);
             const isOnline = members?.some((member)=>onlineUsers.includes(_id));
 
-            return <ChatItem newMessageAlert={newMessageAlert} index={index} isOnline={isOnline} key={_id} name={name} _id={_id} 
-                      avatar={avatar} groupChat={groupChat} sameSender={chatId === _id} handleDeleteChat={handleDeleteChat} />
+            return <ChatItem newMessageAlert={newMessageAlert} index={index} isOnline={isOnline} 
+                    key={_id} name={name} _id={_id} avatar={avatar} groupChat={groupChat} 
+                    sameSender={chatId === _id} handleDeleteChat={handleDeleteChat} />
           })}
         </Stack>
       </div>
