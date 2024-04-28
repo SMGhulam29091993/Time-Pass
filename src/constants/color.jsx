@@ -11,3 +11,5 @@ export const ivory = "#fffff0";
 export const gray = "#f0f0f0";
 
 export const lightBlue = "#2694ab";
+
+export const mattBlack = "1c1c1c";

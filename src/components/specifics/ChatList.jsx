@@ -5,7 +5,7 @@ import ChatItem from '../Shared/ChatItem'
 const ChatList = ({w="100%", chats=[], chatId, onlineUsers=[], newMessagesAlert=[{chatId, count:0}], handleDeleteChat }, ) => {
     return (
       <div>
-        <Stack width={w} direction={'column'}>
+        <Stack width={w} direction={'column'} height={"100%"} overflow={"auto"} >
           {chats?.map((data, index)=>{
             const {name, avatar, _id, groupChat, members} = data;
             const newMessageAlert = newMessagesAlert.find(({chatId})=>chatId === _id);

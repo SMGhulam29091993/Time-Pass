@@ -29,7 +29,7 @@ const NotificationItem = memo(({sender, _id, handler})=>{
     <>
       <ListItem >
         <Stack direction={"row"} width={"100%"} alignItems={"center"} spacing={"1rem"} >
-          <Avatar src={sender.avatar} />
+          <Avatar src={sender.avatar[0]} />
           <Typography variant='body1' sx={{flexGrow : 1, display :"-webkit-box", WebkitLineClamp : 1, width:"100%", 
                           WebkitBoxOrient :"vertical", overflow: "hidden", textOverflow:"ellipsis"}} >
                               {sender.name} sent you a friend request</Typography>
