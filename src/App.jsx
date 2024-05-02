@@ -11,6 +11,8 @@ const NotFound = lazy(()=>import("./pages/NotFound"));
 const LayoutLoaders = lazy(()=>import("./components/Layout/Loaders"));
 
 const AdminLogin = lazy(()=>import("./pages/Admin/AdminLogin"));
+const AdminDashboard = lazy(()=>import("./pages/Admin/AdminDashboard"));
+
 
 const user = true;
 
@@ -28,6 +30,7 @@ const App = () => {
             <Route path="/login" element={<PrivateRoute user={!user} redirect={"/"}><Login/></PrivateRoute>} />
 
             <Route path='/admin' element={<AdminLogin/>} />
+            <Route path='/admin/dashboard' element={<AdminDashboard />} />
 
             <Route path="*" element={<NotFound/>} />
           </Routes>

@@ -4,7 +4,7 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 
 
-const isAdmin = false;
+const isAdmin = true;
 
 const AdminLogin = () => {
 
@@ -15,6 +15,7 @@ const AdminLogin = () => {
   }
 
   if(isAdmin) return <Navigate to="/admin/dashboard" />
+
   return (
     <div style={{backgroundImage : "linear-gradient(rgba(200,200,200,0.5),rgba(120,110,220,0.5))", height:"100vh"}}>
         <Container component={"main"} maxWidth="sm" sx={{
