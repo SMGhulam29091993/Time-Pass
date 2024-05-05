@@ -13,3 +13,9 @@ export const gray = "#f0f0f0";
 export const lightBlue = "#2694ab";
 
 export const mattBlack = "1c1c1c";
+
+export const purple = 'rgba(75,12,192,1)';
+
+export const purpleLite = 'rgba(75,12,192,0.31)';
+
+export const yellow = 'rgba(255,255,224,1)';

@@ -12,7 +12,9 @@ const LayoutLoaders = lazy(()=>import("./components/Layout/Loaders"));
 
 const AdminLogin = lazy(()=>import("./pages/Admin/AdminLogin"));
 const AdminDashboard = lazy(()=>import("./pages/Admin/AdminDashboard"));
-
+const UserManagement = lazy(()=>import("./pages/Admin/UserManagement"));
+const ChatManagement = lazy(()=>import("./pages/Admin/ChatManagement"));
+const MessageManagement = lazy(()=>import("./pages/Admin/MessageManagement"));
 
 const user = true;
 
@@ -31,6 +33,9 @@ const App = () => {
 
             <Route path='/admin' element={<AdminLogin/>} />
             <Route path='/admin/dashboard' element={<AdminDashboard />} />
+            <Route path='/admin/users-management' element={<UserManagement />} />
+            <Route path='/admin/chats-management' element={<ChatManagement />} />
+            <Route path='/admin/messages' element={<MessageManagement />} />
 
             <Route path="*" element={<NotFound/>} />
           </Routes>
