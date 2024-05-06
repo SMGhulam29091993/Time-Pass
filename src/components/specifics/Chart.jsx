@@ -3,7 +3,7 @@ import {Doughnut, Line} from "react-chartjs-2";
 import { Chart as Chartjs, CategoryScale, LinearScale, PointElement, LineElement, ArcElement, Legend, Tooltip, Filler } from "chart.js";
 import { getLastSevenDays } from '../../lib/features';
 
-import { orange, purple, purpleLite, yellow } from '../../constants/color';
+import { deepOrange, deepYellow, orange, purple, purpleLite, yellow } from '../../constants/color';
 
 Chartjs.register(CategoryScale, LinearScale, PointElement, LineElement, ArcElement, Legend, Tooltip, Filler);
 
@@ -41,8 +41,9 @@ const LineChart = ({value=[]}) => {
       },{
         label: 'My Dataset',
         data: [1, 5, 31, 45, 57, 29, 75],
-        fill: false,
+        fill: true,
         borderColor: purple, 
+        backgroundColor: purpleLite,
         tension: 0.1
       }
     ],
@@ -68,7 +69,7 @@ const doughnutChartOptions = {
       display : false
     },
   },
-  cutout: 120,
+  cutout: 80,
 }
 
 const DoughnutChart = ({value=[], labels=[]}) => {
@@ -79,15 +80,17 @@ const DoughnutChart = ({value=[], labels=[]}) => {
       {
         label: 'Total Chats vs Group Chats',
         data: value,
-        borderColor: [orange, purple], 
+        borderColor: purpleLite, 
         backgroundColor : [yellow, orange],
+        hoverBackgroundColor: [deepYellow, deepOrange],
+        offset: 15,
       },
     ],    
   }
 
     return (
-      <div>
-        <Doughnut data={data} options={doughnutChartOptions} />
+      <div style={{zIndex:1000}}>
+        <Doughnut  data={data} options={doughnutChartOptions} />
       </div>
     )
   }

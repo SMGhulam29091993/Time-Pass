@@ -6,6 +6,7 @@ import moment from 'moment'
 import { CurveButton, SearchField } from '../../components/styles/StyledComponents'
 import { DoughnutChart, LineChart } from '../../components/specifics/Chart'
 
+
 const AdminDashboard = () => {
   
   const AppBar = <>
@@ -36,20 +37,21 @@ const AdminDashboard = () => {
         <Container component={"main"}>
           {AppBar}
 
-          <Stack direction={"row"} spacing={"2rem"} flexWrap={"wrap"}>
-            <Paper elevation={3} sx={{padding : "2rem 3.5rem", 
-                    borderRadius : "1rem", width : "100%", maxWidth :"45rem", }}>
+          <Stack direction={{xs:"column", lg:"row"}} gap={"1rem"} flexWrap={"wrap"} 
+              alignItems={{xs:"center", lg:"stretch"}} justifyContent={"center"} gap={"1rem"}>
+            <Paper elevation={3} sx={{padding : "1rem 1.5rem",
+                    borderRadius : "1rem", width : "100%", maxWidth :"35rem", }}>
               <Typography variant='h5' margin={"2rem 0"}>Last Messages</Typography>
               <LineChart value={[]} />
             </Paper>
             <Paper elevation={3} sx={{padding:"1rem", borderRadius:"1rem", display:"flex", justifyContent:"center",
                                       alignItems:"center", width:{xs:"100%", sm:"50%"}, position:"relative",    
-                                      width:"100%", maxWidth:"25rem", height:"25rem" }}>
+                                      width:"100%", maxWidth:"20rem", }}>
               
               <DoughnutChart labels={["Single Chats", "Group Chats"]} value={[29,69]} />
 
               <Stack position={"absolute"} direction={"row"} justifyContent={"center"} alignItems={"center"}
-                      spacing={"0.5rem"} width={"100%"} height={"100%"} >
+                      spacing={"0.5rem"} width={"100%"} height={"100%"}>
                 <GroupIcon /> <Typography>VS</Typography> <PersonIcon />
 
               </Stack>

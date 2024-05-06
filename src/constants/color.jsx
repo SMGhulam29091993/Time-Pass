@@ -19,3 +19,7 @@ export const purple = 'rgba(75,12,192,1)';
 export const purpleLite = 'rgba(75,12,192,0.31)';
 
 export const yellow = 'rgba(255,255,224,1)';
+
+export const deepYellow ="rgba(255,240,0,1)";
+
+export const deepOrange = "rgba(235,149,50,1)";
