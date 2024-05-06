@@ -38,7 +38,7 @@ const AdminDashboard = () => {
           {AppBar}
 
           <Stack direction={{xs:"column", lg:"row"}} gap={"1rem"} flexWrap={"wrap"} 
-              alignItems={{xs:"center", lg:"stretch"}} justifyContent={"center"} gap={"1rem"}>
+              alignItems={{xs:"center", lg:"stretch"}} justifyContent={"center"} >
             <Paper elevation={3} sx={{padding : "1rem 1.5rem",
                     borderRadius : "1rem", width : "100%", maxWidth :"35rem", }}>
               <Typography variant='h5' margin={"2rem 0"}>Last Messages</Typography>
