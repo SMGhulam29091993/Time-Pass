@@ -70,7 +70,8 @@ export const sampleMessage = [
             {
                 public_id : "ahskck_2",
                 url : "https://www.freeiconspng.com/thumbs/profile-icon-png/profile-icon-9.png"
-            }
+            },
+            
         ],
         content : "Tera L*uda Ka message",
         _id : "dlsjvkl68v7ssvs6844ca",
@@ -104,7 +105,7 @@ export const dashBoardData = {
     ],
     chats :[
         {
-            name: "John De Souza ",
+            name: "John De Souza Group",
             avatar : ["https://www.freeiconspng.com/thumbs/profile-icon-png/profile-icon-9.png"],
             _id:"1",
             groupChats: false,
@@ -113,12 +114,12 @@ export const dashBoardData = {
             totalMembers: 2,
             totalMessages : 20,
             creator : {
-                name :"Joseph Gonzalez",
+                name :"Joseph Gonzalez ",
                 avatar : "https://www.freeiconspng.com/thumbs/profile-icon-png/profile-icon-9.png",
             },
         },
         {
-            name: "Joshua Yea Boi ",
+            name: "Joshua Yea Boi Group",
             avatar : ["https://www.freeiconspng.com/thumbs/profile-icon-png/profile-icon-9.png"],
             _id:"2",
             groupChats: true,
@@ -131,5 +132,39 @@ export const dashBoardData = {
                 avatar : "https://www.freeiconspng.com/thumbs/profile-icon-png/profile-icon-9.png",
             },
         },
-    ]
+    ],
+    messages : [
+        {
+            attachments :[],
+            contents : "L*uda ka messages",
+            _id :"idhif64sdv45dsv4s",
+            sender : {
+                avatar : "https://www.freeiconspng.com/thumbs/profile-icon-png/profile-icon-9.png",
+                name:"Chut*ya Chaman",
+            },
+            chat : "chatId",
+            groupChats : false,
+            createdAt :"2024-05-07T10:00:00.000Z"
+        },
+        {
+            attachments : [
+                {
+                    public_id : "vndjyft",
+                    url : "https://st3.depositphotos.com/15648834/17930/v/450/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"
+                },
+               
+            ],
+            contents : "Tera L*nd ka messages",
+            _id :"dvji5vddvvj4v8vd9vd",
+            sender: {
+                avatar : "https://www.freeiconspng.com/thumbs/profile-icon-png/profile-icon-9.png",
+                name : "Chaman Boi",
+            },
+            chat :"chatId",
+            groupChats : true,
+            createdAt :"2024-05-01T12:00:00.000Z"
+        }
+    ],
 }
+
+
