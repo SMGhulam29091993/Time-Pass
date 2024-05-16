@@ -11,6 +11,7 @@ const Login = () => {
     const toggleLogin =()=>setIsLogin(!isLogin);
 
     const name = useInputValidation("");
+    const email= useInputValidation("")
     const username = useInputValidation("", UsernameValidator);
     const bio = useInputValidation("");
     const password = useStrongPassword();
@@ -26,7 +27,7 @@ const Login = () => {
     }
 
   return (
-    <div style={{backgroundImage : "linear-gradient(rgba(200,200,200,0.5),rgba(120,110,220,0.5))", height:"100vh"}}>
+    <div style={{backgroundImage : "linear-gradient(rgba(200,200,200,0.5),rgba(120,110,220,0.5))", height:"110vh"}}>
         <Container component={"main"} maxWidth="sm" sx={{
                                                     
                                                     display : "flex",
@@ -48,8 +49,8 @@ const Login = () => {
                 
                             <Typography variant='h4'>Login</Typography>
                             <form style={{marginTop:"0.5rem", width:"100%"}} onSubmit={handleLogin}>
-                                <TextField required fullWidth label="Username"  margin='normal' 
-                                    value={username.value} onChange={username.changeHandler} variant='outlined' />
+                                <TextField required fullWidth label="Email"  margin='normal' 
+                                    value={email.value} onChange={email.changeHandler} variant='outlined' />
                                 
                                 <TextField required fullWidth  value={password.value} onChange={password.changeHandler}
                                     label="Password" type='password'  margin='normal' variant='outlined' />
@@ -86,6 +87,9 @@ const Login = () => {
                                 
                                 <TextField required fullWidth label="Name" margin='none' sx={{padding : "0.3rem"}}
                                     value={name.value} onChange={name.changeHandler} variant='outlined'  />
+
+                                <TextField required fullWidth label="Email"  margin='none' sx={{padding : "0.3rem"}}
+                                    value={email.value} onChange={email.changeHandler} variant='outlined' />
 
                                 <TextField required fullWidth label="Username" margin='none' sx={{padding : "0.3rem"}}
                                     value={username.value} onChange={username.changeHandler} variant='outlined' />

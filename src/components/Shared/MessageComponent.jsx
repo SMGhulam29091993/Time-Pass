@@ -31,7 +31,7 @@ const MessageComponent = ({message, user}) => {
                     <a href={url} target='_blank' download style={{color: "black"}}>
                         {RenderAttachment(file,url)}
                     </a>
-                </Box>
+                </Box>         
             )
         })}
         <Typography variant='caption' color={"text.se   condary"}>{timeAgo}</Typography>
