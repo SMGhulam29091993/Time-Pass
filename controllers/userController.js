@@ -1,6 +1,7 @@
 const bcryptjs = require("bcryptjs");
 const User = require("../model/userModel.js");
-const { sendToken } = require("../utils/features.js");
+const {sendToken} = require("../utils/features.js");
+const { cookieOptions } = require("../constants/constants.js");
 
 // user register
 
@@ -62,5 +63,16 @@ module.exports.getProfile = async (req,res,next)=>{
         return res.status(200).send({message :"Here are the user details...", success: true, user});
     } catch (error) {
         next(error);
+    }
+}
+
+
+module.exports.destroySession = async (req,res,next)=>{
+    try {
+        return res.status(201)
+                    .cookie("timepass-token", "", cookieOptions)
+                    .send({message:"User has logged out successfully...", success : true})
+    }catch(error){
+        next(error)
     }
 }
