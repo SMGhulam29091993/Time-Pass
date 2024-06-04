@@ -22,7 +22,6 @@ module.exports.registerUser = async (req, res, next) => {
         // Send a success response
         if (user) {
             return res.status(201).send({ message: "User registered successfully", success: true, user });
-            sendToken(res,user,201,"User registered successfully");
         }
     } catch (error) {
         next(error);
@@ -53,6 +52,9 @@ module.exports.createSession = async (req,res,next)=>{
 module.exports.getProfile = async (req,res,next)=>{
     const {userID} = req.params;
     try {
+        if (userID !== req.userID){
+            return res.status(404).send({message: "User not authenticated...", success: false});
+        }
         const user = await User.findById(userID);
         if(!user){
             return res.status(404).send({message:"User not found!!!",success:false});
