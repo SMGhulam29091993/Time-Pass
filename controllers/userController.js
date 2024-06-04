@@ -1,5 +1,8 @@
 const bcryptjs = require("bcryptjs");
 const User = require("../model/userModel.js");
+const { sendToken } = require("../utils/features.js");
+
+// user register
 
 module.exports.registerUser = async (req, res, next) => {
     const { email, password, ...rest } = req.body;
@@ -19,8 +22,43 @@ module.exports.registerUser = async (req, res, next) => {
         // Send a success response
         if (user) {
             return res.status(201).send({ message: "User registered successfully", success: true, user });
+            sendToken(res,user,201,"User registered successfully");
         }
     } catch (error) {
         next(error);
     }
 };
+
+
+// user login
+
+module.exports.createSession = async (req,res,next)=>{
+    const {email, password} = req.body;
+    try {
+        const user = await User.findOne({email}).select("+password");
+        if(!user){
+            return res.status(202).send({message:"User not registered.!!!", success: false});
+        }
+        const isPasswordValid = await bcryptjs.compare(password,user.password);
+        if (!isPasswordValid) {
+            return res.status(401).send({ message: "Invalid email/password.", success: false });
+        }
+        
+        return sendToken(res,user, 200, "User logged in successfuly.!!!");
+    } catch (error) {
+        next(error);
+    }
+};
+
+module.exports.getProfile = async (req,res,next)=>{
+    const {userID} = req.params;
+    try {
+        const user = await User.findById(userID);
+        if(!user){
+            return res.status(404).send({message:"User not found!!!",success:false});
+        }
+        return res.status(200).send({message :"Here are the user details...", success: true, user});
+    } catch (error) {
+        next(error);
+    }
+}
