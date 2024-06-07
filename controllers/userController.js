@@ -4,7 +4,6 @@ const {sendToken} = require("../utils/features.js");
 const { cookieOptions } = require("../constants/constants.js");
 
 // user register
-
 module.exports.registerUser = async (req, res, next) => {
     const { email, password, ...rest } = req.body;
     try {
@@ -30,8 +29,7 @@ module.exports.registerUser = async (req, res, next) => {
 };
 
 
-// user login
-
+// user login controller
 module.exports.createSession = async (req,res,next)=>{
     const {email, password} = req.body;
     try {
@@ -50,6 +48,8 @@ module.exports.createSession = async (req,res,next)=>{
     }
 };
 
+
+// get user profile controller
 module.exports.getProfile = async (req,res,next)=>{
     const {userID} = req.params;
     try {
@@ -66,7 +66,7 @@ module.exports.getProfile = async (req,res,next)=>{
     }
 }
 
-
+// logout controller
 module.exports.destroySession = async (req,res,next)=>{
     try {
         return res.status(201)
@@ -74,5 +74,16 @@ module.exports.destroySession = async (req,res,next)=>{
                     .send({message:"User has logged out successfully...", success : true})
     }catch(error){
         next(error)
+    }
+}
+
+// search user controller
+module.exports.searchUser = async (req,res,next)=>{
+    const {name} = req.query;
+    try {
+        
+        return res.status(200).send({message : "Here is your search results...", success:true, name})
+    } catch (error) {
+        next(error);
     }
 }

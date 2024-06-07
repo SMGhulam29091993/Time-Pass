@@ -11,4 +11,4 @@ module.exports.sendToken = (res, user, code, message)=>{
                 .send({message, success : true, user, token })
 }
 
-
+module.exports.emitEvent = (req,event,users,data)=>{console.log("Emitting event", event);}

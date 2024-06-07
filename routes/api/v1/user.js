@@ -10,5 +10,6 @@ router.post("/register", singleAvatar, userController.registerUser);
 router.post("/login-user", userController.createSession);
 router.get("/getProfile/:userID",isAuthenticated, userController.getProfile);
 router.post("/logout", userController.destroySession);
+router.get("/search", isAuthenticated, userController.searchUser);
 
 module.exports = router;

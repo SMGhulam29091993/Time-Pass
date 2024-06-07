@@ -5,10 +5,14 @@ const morgan =  require("morgan");
 const PORT = 8000;
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const { createUser } = require("./seeders/user.js");
 const db = require("./config/mongoose.js");
+
+createUser(10);
 
 const app = express();
 const errorHandler = require("./middlewares/errorHandlermiddleware.js");
+
 
 
 // middleware for the app
