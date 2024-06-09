@@ -55,3 +55,25 @@ module.exports.getChats = async (req,res,next)=>{
         next(error);
     }
 }
+
+
+// get the groupChat List that user has created in group page
+
+module.exports.getGroupChat = async (req,res,next)=>{
+    try {
+        const chats = await Chat.find({groupChat : true, creator : req.userID}).populate("members","name avatar");
+
+        const groups = chats.map(({members, _id, groupChat, name})=>(
+            {
+                _id,
+                name,
+                groupChat,
+                avatar : members.slice(0,3).map(({avatar})=>avatar.url),
+            }
+        ));
+
+        return res.status(200).send({message : "The group chat list...", success: true, groups})
+    } catch (error) {
+        next(error);
+    }
+}
