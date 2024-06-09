@@ -25,3 +25,33 @@ module.exports.newGroupChat = async (req,res,next)=>{
         next(error);
     }
 }
+
+// get chat list of members for the user
+
+module.exports.getChats = async (req,res,next)=>{
+    try {
+        const chats = await Chat.find().populate("members", "name avatar");
+
+        const transformedChats = chats.map(({_id,members, name, groupChat})=>{
+            
+            const otherMembers = members.find((member)=>member._id.toString() !== req.userID.toString());
+            
+            return {
+                _id, groupChat,
+                avatar : groupChat?members.slice(0,3).map(({avatar})=>avatar.url) : [otherMembers.avatar.url],
+                name : groupChat?name : otherMembers.name,
+                members: members.reduce((prev,curr)=>{
+                    if(curr._id.toString() !== req.userID.toString()){
+                        prev.push(curr._id)
+                    }
+                    return prev;
+                },[])
+            }
+        });
+
+        return res.status(200).send({message : "Your chat list", success: true, transformedChats})
+
+    } catch (error) {
+        next(error);
+    }
+}
