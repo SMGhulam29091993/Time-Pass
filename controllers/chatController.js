@@ -1,5 +1,6 @@
 const { ALERT, REFETCH_CHAT } = require("../constants/event.js");
 const Chat = require("../model/chatModel.js");
+const User = require("../model/userModel.js");
 const { emitEvent } = require("../utils/features.js");
 
 
@@ -73,6 +74,47 @@ module.exports.getGroupChat = async (req,res,next)=>{
         ));
 
         return res.status(200).send({message : "The group chat list...", success: true, groups})
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+module.exports.addMembers = async (req,res,next)=>{
+    const {chatID, members} = req.body;
+    try {
+        if(!members || members.length < 1) return res.status(400)
+                                                        .send({message:"Please provide members...", success: false})
+
+        const chat = await Chat.findById(chatID);
+        if (!chat){
+            return res.status(404).send({message: "Chat not found...", success : false});
+        }
+        if(!chat.groupChat){
+            return res.status(400).send({message :"This is not a group chat...", success : false});
+        }
+        if(chat.creator.toString() !== req.userID.toString() ){
+            return res.status(403).send({message :"You cannot add members...", success : false});
+        }
+
+        const allNewMembersPromise = members.filter((i)=>!chat.members.includes(i) ).map((i)=>User.findById(i, "name"));
+
+        const allNewMembers = await Promise.all(allNewMembersPromise);
+
+        chat.members.push(...allNewMembers.map((i)=>i._id));
+
+        if (chat.members.length > 100){
+            return res.status(400).send({message : "Group limit reachedtoadd members...", success: false});
+        }
+        await chat.save();
+
+        const allUserName = allNewMembers.map((i)=>i.name).join(",");
+
+        emitEvent(req,ALERT,chat.members, `${allUserName} has been added to the group...`);
+
+        emitEvent(req, REFETCH_CHAT, chat.members);
+
+        return res.status(200).send({message :"Members added to the group", success : true, })
     } catch (error) {
         next(error);
     }
