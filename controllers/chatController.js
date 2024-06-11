@@ -119,3 +119,45 @@ module.exports.addMembers = async (req,res,next)=>{
         next(error);
     }
 }
+
+
+// remove members from group chat...
+
+module.exports.removeMembers = async (req, res, next) => {
+    const { chatID, userID } = req.body;
+    
+    try {
+        const [chat, userToRemove] = await Promise.all([
+            Chat.findById(chatID),
+            User.findById(userID, "name")
+        ]);
+
+        if (!chat) {
+            return res.status(404).send({ message: "Chat not found...", success: false });
+        }
+
+        if (!chat.groupChat) {
+            return res.status(400).send({ message: "This is not a group chat...", success: false });
+        }
+
+        if (chat.creator.toString() !== req.userID.toString()) {
+            return res.status(403).send({ message: "You do not have permission to remove members...", success: false });
+        }
+
+        if (chat.members.length <= 3) {
+            return res.status(400).send({ message: "Group must have at least 3 members.", success: false });
+        }
+
+        chat.members = chat.members.filter(member => member.toString() !== userID.toString());
+
+        await chat.save();
+
+        emitEvent(req, ALERT, chat.members, `${userToRemove.name} has been removed from the group.`);
+        emitEvent(req, REFETCH_CHAT, chat.members);
+
+        return res.status(200).send({ message: "Member removed successfully...", success: true });
+
+    } catch (error) {
+       next(error);
+    }
+};
