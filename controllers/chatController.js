@@ -161,3 +161,42 @@ module.exports.removeMembers = async (req, res, next) => {
        next(error);
     }
 };
+
+
+// controller if any user wants to leave the group
+
+module.exports.leaveGroup = async (req,res,next)=>{
+    const chatID = req.params.chatID;
+    try {
+        const chat = await Chat.findById(chatID);
+        if (!chat) {
+            return res.status(404).send({ message: "Chat not found...", success: false });
+        }
+        if (!chat.groupChat) {
+            return res.status(400).send({ message: "This is not a group chat...", success: false });
+        }
+
+        const remainingMembers = chat.members.filter(member=>member.toString() !== req.userID.toString());
+
+        if (chat.creator.toString() === req.userID.toString()){
+            if (remainingMembers.length > 0) {
+                const randomCreatorIndex = Math.floor(Math.random() * remainingMembers.length);
+                const newCreator = remainingMembers[randomCreatorIndex];
+                chat.creator = newCreator;
+            } else {
+                return res.status(400).send({ message: "You cannot leave the group as the last member.", success: false });
+            }
+        }
+
+        chat.members = remainingMembers;
+        
+        const [user,savedChat] = await Promise.all([User.findById(req.userID,"name"), chat.save()]);
+
+        emitEvent(req,ALERT, chat.members, `User ${user.name} has left the group...`);
+        
+        return res.status(200).send({message : "User has left the group...", success : true})
+    } catch (error) {
+        next(error);
+    }
+}
+

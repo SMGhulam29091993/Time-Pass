@@ -12,5 +12,6 @@ router.get("/getChat", isAuthenticated, chatController.getChats);
 router.get("/getGroupChat", isAuthenticated, chatController.getGroupChat);
 router.put("/addMembers", isAuthenticated, chatController.addMembers);  
 router.put("/removeMembers", isAuthenticated, chatController.removeMembers);
+router.delete("/leaveGroup/:chatID", isAuthenticated, chatController.leaveGroup);
 
 module.exports = router;
