@@ -27,7 +27,7 @@ module.exports.newGroupChat = async (req,res,next)=>{
     }
 }
 
-// get chat list of members for the user
+// get chat list for the user
 
 module.exports.getChats = async (req,res,next)=>{
     try {
@@ -177,6 +177,10 @@ module.exports.leaveGroup = async (req,res,next)=>{
         }
 
         const remainingMembers = chat.members.filter(member=>member.toString() !== req.userID.toString());
+
+        if(remainingMembers.length <= 3){
+            return res.status(400).send({ message: "Group must have at least 3 members.", success: false });
+        }
 
         if (chat.creator.toString() === req.userID.toString()){
             if (remainingMembers.length > 0) {
