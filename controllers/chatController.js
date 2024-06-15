@@ -2,7 +2,7 @@ const { ALERT, REFETCH_CHAT, NEW_ATTACHMENTS, NEW_MESSAGE_ALERT } = require("../
 const Chat = require("../model/chatModel.js");
 const User = require("../model/userModel.js");
 const Message = require("../model/messageModel.js");
-const { emitEvent } = require("../utils/features.js");
+const { emitEvent, deleteFilesFromCloudinary } = require("../utils/features.js");
 
 
 module.exports.newGroupChat = async (req,res,next)=>{
@@ -284,7 +284,49 @@ module.exports.renameGroup = async (req,res,next)=>{
 
         await chat.save();
 
+        emitEvent(req, REFETCH_CHAT, chat.members);
+
         return res.status(200).send({message:"Group name upated...", success : true})
+    } catch (error) {
+        next(error);
+    }
+}
+
+
+// delete chats
+
+module.exports.deleteChat = async (req,res,next)=>{
+    const {chatID} = req.params;
+  
+
+    try {
+        const chat = await Chat.findById(chatID);
+        if(!chat){
+            return res.status(404).send({message : "Chat not found...",success : false});
+        }
+        
+        if(chat.groupChat && chat.creator.toString()!==req.userID.toString()){
+            return res.status(402).send({message : "Only admin can delete chat...", success : false});
+        }
+        const members = chat.members
+        if(!chat.groupChat && !members.includes(req.userID.toString())) return res.status(403).send({message : "You cannot delete chat...", success : false}); 
+        
+        
+        // the below will delete all messages as well as attachments or files from cloudinary
+        const messageWithAttachments = await Message.find({chat : chatID, attachments : {$exists:true, $ne: []}});
+
+        const public_ids= [];
+        
+        messageWithAttachments.forEach(({attachments})=>{attachments.forEach(({public_id})=>{public_ids.push(public_id)})})
+        
+        await Promise.all([
+            deleteFilesFromCloudinary(public_ids), chat.deleteOne(), Message.deleteMany({chat: chatID})     
+        ])
+
+        emitEvent(req, REFETCH_CHAT,chat.members);
+
+        return res.status(200).send({message : "Chat deleted successfully...", success : true});
+
     } catch (error) {
         next(error);
     }

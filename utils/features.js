@@ -12,3 +12,7 @@ module.exports.sendToken = (res, user, code, message)=>{
 }
 
 module.exports.emitEvent = (req,event,users,data)=>{console.log("Emitting event", event);}
+
+module.exports.deleteFilesFromCloudinary = async (public_id)=>{
+    // this function files or attachments from cloudinary
+}

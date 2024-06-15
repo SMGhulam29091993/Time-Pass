@@ -23,6 +23,6 @@ router.post("/message-attachments", isAuthenticated, attachmentsMulter, chatCont
 
 // get chat details,rename,delete
 router.route("/:chatID").all(isAuthenticated).get(chatController.getChatDetails)
-                                            .put(chatController.renameGroup).delete();
+                                            .put(chatController.renameGroup).delete(chatController.deleteChat);
 
 module.exports = router;
