@@ -266,3 +266,26 @@ module.exports.getChatDetails = async (req,res,next)=>{
 
 
 // rename chat/group
+module.exports.renameGroup = async (req,res,next)=>{
+    try {
+        const {chatID} = req.params;
+        const {name} = req.body;
+
+        const chat = await Chat.findById(chatID);
+        if(!chat)return res.status(404).send({message : "Chat not found...",success : false});
+
+        if(!chat.groupChat){
+            return res.status(400).send({message : "This is not a group chat...",success : false});
+        }
+        console.log("User ID: ", req.userID);
+        if(chat.creator.toString() !== req.userID.toString()) return res.status(400)
+                                                                .send({message :"Only admin can change the name...", success : false})
+        chat.name = name;
+
+        await chat.save();
+
+        return res.status(200).send({message:"Group name upated...", success : true})
+    } catch (error) {
+        next(error);
+    }
+}
