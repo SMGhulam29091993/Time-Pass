@@ -1,6 +1,7 @@
 const express = require("express");
 const { isAuthenticated } = require("../../../middlewares/authentication");
 const chatController = require("../../../controllers/chatController.js");
+const { attachmentsMulter } = require("../../../middlewares/multer.js");
 
 
 
@@ -13,5 +14,14 @@ router.get("/getGroupChat", isAuthenticated, chatController.getGroupChat);
 router.put("/addMembers", isAuthenticated, chatController.addMembers);  
 router.put("/removeMembers", isAuthenticated, chatController.removeMembers);
 router.delete("/leaveGroup/:chatID", isAuthenticated, chatController.leaveGroup);
+
+
+// Attechments
+router.post("/message-attachments", isAuthenticated, attachmentsMulter, chatController.sendAttachments)
+
+
+
+// get chat details,rename,delete
+router.route("/:chatID", isAuthenticated).get(chatController.getChatDetails).put().delete();
 
 module.exports = router;

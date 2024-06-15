@@ -1,6 +1,7 @@
-const { ALERT, REFETCH_CHAT } = require("../constants/event.js");
+const { ALERT, REFETCH_CHAT, NEW_ATTACHMENTS, NEW_MESSAGE_ALERT } = require("../constants/event.js");
 const Chat = require("../model/chatModel.js");
 const User = require("../model/userModel.js");
+const Message = require("../model/messageModel.js");
 const { emitEvent } = require("../utils/features.js");
 
 
@@ -204,3 +205,64 @@ module.exports.leaveGroup = async (req,res,next)=>{
     }
 }
 
+
+
+// controller for sending attachments
+
+module.exports.sendAttachments = async (req,res,next)=>{
+    const {chatID} = req.body;
+    try {
+        const [chat, user] = await Promise.all([Chat.findById(chatID), User.findById(req.userID,"name")]);
+
+        if(!chat)return res.status(404).send({message:"Chat not found...", success : false});
+
+        const files = req.files || [];
+
+        if(files.length < 1) return res.status(400).send({message:"No attachments found...", success: false});
+
+        const attachments = [];
+
+        const messageForDB = {content :"", attachments, sender : user._id, chat: chatID};
+
+        const messageForRealTime = {...messageForDB, sender:{_id : user._id, name : user.name}};
+        
+        
+
+        const message = await Message.create(messageForDB);
+
+        emitEvent(req,NEW_ATTACHMENTS, chat.members, {message : messageForRealTime, chatID});
+
+        emitEvent(req,NEW_MESSAGE_ALERT, chat.members, {chatID});
+
+        return res.status(200).send({message, success : true})
+    } catch (error) {
+        next(error);
+    }
+}
+
+// get chat details
+module.exports.getChatDetails = async (req,res,next)=>{
+    try {
+        if(req.query.populate === "true"){
+            const chat = await Chat.findById(req.params.chatID).populate("members","name avatar").lean();
+            console.log("Populate",chat);
+
+            if(!chat)return res.status(404).send({message : "Chat not found...", success : false});
+            
+            chat.members = chat.members.map(({_id, name, avatar})=>({_id, name , avatar : avatar.url}));
+
+            return res.status(200).send({message : "Here is your chat details...", success : true, chat});
+        }else{
+            const chat = await Chat.findById(req.params.chatID);
+
+            if(!chat)return res.status(404).send({message : "Chat not found...", success : false});
+
+            return res.status(200).send({message : "Here is your chat details...", success : true, chat}); 
+        }
+    } catch (error) {
+        next(error);
+    }
+}
+
+
+// rename chat/group
