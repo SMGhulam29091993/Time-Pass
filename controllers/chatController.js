@@ -331,3 +331,30 @@ module.exports.deleteChat = async (req,res,next)=>{
         next(error);
     }
 }
+
+// get messages
+module.exports.getMessages = async (req,res,next)=>{
+    const {chatID} = req.params;
+    try {
+        const {page = 1} = req.query;
+        const limit = 20;
+        const skip = (page-1)*limit;
+
+        const [messages, totalMessageCount] = await Promise.all([
+            Message.find({chat : chatID})
+                    .sort({createdAt : -1})
+                    .skip(skip)
+                    .limit(limit)
+                    .populate("sender", "name")
+                    .lean(),
+                    Message.countDocuments({chat: chatID})
+        ]);
+
+        const totalPages = Math.ceil(totalMessageCount/limit);
+
+        return res.status(200)
+                .send({message : "Here is your message details...", success: true,messages : messages.reverse(), totalPages})
+    } catch (error) {
+        next(error);
+    }
+}

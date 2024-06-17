@@ -16,6 +16,14 @@ router.put("/removeMembers", isAuthenticated, chatController.removeMembers);
 router.delete("/leaveGroup/:chatID", isAuthenticated, chatController.leaveGroup);
 
 
+
+
+// Messages
+router.get("/messages/:chatID", isAuthenticated,chatController.getMessages);
+
+
+
+
 // Attechments
 router.post("/message-attachments", isAuthenticated, attachmentsMulter, chatController.sendAttachments)
 

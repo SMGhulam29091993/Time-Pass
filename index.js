@@ -5,13 +5,23 @@ const morgan =  require("morgan");
 const PORT = 8000;
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+
 // const { createUser } = require("./seeders/user.js");
-const db = require("./config/mongoose.js");
+// const { createSampleChats, createSampleGroupChats } = require("./seeders/chat.js");
+// const { createMessageInAChat } = require("./seeders/message.js");   
+
+
+const db = require("./config/mongoose.js"); //connecting with database
 
 // createUser(10);
+// createSampleChats(10);
+// createSampleGroupChats(10);
+// createMessageInAChat("667095050ede9d0afa1c19a2",50);
 
 const app = express();
 const errorHandler = require("./middlewares/errorHandlermiddleware.js");
+
+
 
 
 
