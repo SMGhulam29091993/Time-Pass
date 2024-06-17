@@ -294,7 +294,6 @@ module.exports.renameGroup = async (req,res,next)=>{
 
 
 // delete chats
-
 module.exports.deleteChat = async (req,res,next)=>{
     const {chatID} = req.params;
   
