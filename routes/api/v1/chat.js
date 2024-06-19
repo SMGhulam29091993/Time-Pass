@@ -35,6 +35,6 @@ router.post("/message-attachments", isAuthenticated, attachmentsMulter,sendAttac
 // get chat details,rename,delete
 router.route("/:chatID").all(isAuthenticated).get(getChatIDValidator(),validateHandler,chatController.getChatDetails)
                                             .put(renameGroupValidator(),validateHandler, chatController.renameGroup)
-                                            .delete(chatController.deleteChat);
+                                            .delete(getChatIDValidator(),validateHandler,chatController.deleteChat);
 
 module.exports = router;
