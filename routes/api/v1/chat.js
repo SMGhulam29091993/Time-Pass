@@ -2,7 +2,7 @@ const express = require("express");
 const { isAuthenticated } = require("../../../middlewares/authentication");
 const chatController = require("../../../controllers/chatController.js");
 const { attachmentsMulter } = require("../../../middlewares/multer.js");
-const { validateHandler, newGroupValidator, addMemberValidator } = require("../../../lib/validator.js");
+const { validateHandler, newGroupValidator, addMemberValidator, removeMemberValidator, leaveGroupValidator, sendAttachmentvalidator } = require("../../../lib/validator.js");
 
 
 
@@ -13,8 +13,8 @@ router.post("/new-groupChat",newGroupValidator(),validateHandler, isAuthenticate
 router.get("/getChat", isAuthenticated, chatController.getChats);
 router.get("/getGroupChat", isAuthenticated, chatController.getGroupChat);
 router.put("/addMembers",addMemberValidator(),validateHandler, isAuthenticated, chatController.addMembers);  
-router.put("/removeMembers", isAuthenticated, chatController.removeMembers);
-router.delete("/leaveGroup/:chatID", isAuthenticated, chatController.leaveGroup);
+router.put("/removeMembers",removeMemberValidator(),validateHandler, isAuthenticated, chatController.removeMembers);
+router.delete("/leaveGroup/:chatID",leaveGroupValidator(), validateHandler, isAuthenticated, chatController.leaveGroup);
 
 
 
@@ -26,7 +26,7 @@ router.get("/messages/:chatID", isAuthenticated,chatController.getMessages);
 
 
 // Attechments
-router.post("/message-attachments", isAuthenticated, attachmentsMulter, chatController.sendAttachments)
+router.post("/message-attachments",sendAttachmentvalidator(),validateHandler, isAuthenticated, attachmentsMulter, chatController.sendAttachments)
 
 
 
