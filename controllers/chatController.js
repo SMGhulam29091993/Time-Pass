@@ -4,13 +4,13 @@ const User = require("../model/userModel.js");
 const Message = require("../model/messageModel.js");
 const { emitEvent, deleteFilesFromCloudinary } = require("../utils/features.js");
 
-
+// create group chat
 module.exports.newGroupChat = async (req,res,next)=>{
     const {name, members} = req.body;
     try {
-        if(members.length < 2){
-            return res.status(400).send({message :"Members must have ateast 3 members...", success : false});
-        }
+        // if(members.length < 2){
+        //     return res.status(400).send({message :"Members must have ateast 3 members...", success : false});
+        // }
 
         const allMembers = [...members,req.userID];
         const chat = await Chat.create({name, groupChat : true, creator : req.userID, members : allMembers});
