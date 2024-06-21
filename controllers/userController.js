@@ -1,5 +1,6 @@
 const bcryptjs = require("bcryptjs");
 const User = require("../model/userModel.js");
+const Chat = require("../model/chatModel.js");
 const {sendToken} = require("../utils/features.js");
 const { cookieOptions } = require("../constants/constants.js");
 
@@ -81,8 +82,19 @@ module.exports.destroySession = async (req,res,next)=>{
 module.exports.searchUser = async (req,res,next)=>{
     const {name} = req.query;
     try {
+        const myChats = await Chat.find({groupChat: false, members : req.userID});
+
+        // below function will return my friends or whom I have chatted with
+        const myFriends = myChats.map((chat)=>chat.members).flat()//we can also use flatMap() the output will be same, it will flatten the subarray within the array to a single array
+
+        // below will give list of people who are not friends or never chatted with
+        const notFriendListUser = await User.find({_id: {$nin: myFriends},name : {$regex:name, $options :"i"}});
+
+        // modified the response
+        const unknownUsers = notFriendListUser.map(({_id,name,avatar})=>({_id,name ,avatar: avatar.url}))
+
+        return res.status(200).send({message:"Here are your chats lists...", success : true, unknownUsers})
         
-        return res.status(200).send({message : "Here is your search results...", success:true, name})
     } catch (error) {
         next(error);
     }
