@@ -143,7 +143,7 @@ module.exports.acceptsFriendRequest = async (req,res,next)=>{
 
         if(!request) return res.status(404).send({message: "Request not found!!!",success: false});
 
-        if(request.receiver.toString() !== req.userID.toString())return res.status(400).send({message:"You are not authorized to accept this request...", success: false})
+        if(request.receiver._id.toString() !== req.userID.toString())return res.status(400).send({message:"You are not authorized to accept this request...", success: false})
         
         if(!accept){
             await request.deleteOne();
@@ -160,6 +160,23 @@ module.exports.acceptsFriendRequest = async (req,res,next)=>{
 
         return res.status(200).send({message:"Friend Request Accepted...", success : true, senderID : request.sender._id})
 
+    } catch (error) {
+        next(error);
+    }
+}
+
+
+// get notifications...
+module.exports.getNotifications = async (req,res,next)=>{
+    try {
+        const request = await Request.find({receiver : req.userID}).populate("sender","name avatar");
+
+        const allRequest = request.map(({_id,sender})=>(
+                            {
+                                _id, 
+                                sender:{_id : sender._id, name : sender.name, avatar : sender.avatar.url}
+                            }));
+        return res.status(200).send({message : "You have notifications...", success:true, allRequest})
     } catch (error) {
         next(error);
     }
