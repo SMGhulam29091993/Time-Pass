@@ -1,8 +1,10 @@
 const bcryptjs = require("bcryptjs");
 const User = require("../model/userModel.js");
 const Chat = require("../model/chatModel.js");
-const {sendToken} = require("../utils/features.js");
+const Request = require("../model/requestModel.js");
+const {sendToken, emitEvent} = require("../utils/features.js");
 const { cookieOptions } = require("../constants/constants.js");
+const { NEW_REQUEST, REFETCH_CHAT } = require("../constants/event.js");
 
 // user register
 module.exports.registerUser = async (req, res, next) => {
@@ -88,13 +90,76 @@ module.exports.searchUser = async (req,res,next)=>{
         const myFriends = myChats.map((chat)=>chat.members).flat()//we can also use flatMap() the output will be same, it will flatten the subarray within the array to a single array
 
         // below will give list of people who are not friends or never chatted with
-        const notFriendListUser = await User.find({_id: {$nin: myFriends},name : {$regex:name, $options :"i"}});
+        const notFriendListUser = await User.find({_id: {$nin: myFriends},
+                                                  $or: [{ name : {$regex:name, $options :"i"}},
+                                                      {username : {$regex:name, $options :"i"}}]});
+    
 
         // modified the response
         const unknownUsers = notFriendListUser.map(({_id,name,avatar})=>({_id,name ,avatar: avatar.url}))
 
         return res.status(200).send({message:"Here are your chats lists...", success : true, unknownUsers})
         
+    } catch (error) {
+        next(error);
+    }
+}
+
+// send friend request controller
+module.exports.sendFriendRequst = async (req,res,next)=>{
+    const {receiverID} = req.body;
+    try {
+        const request = await Request.findOne({
+            $or :[
+                {sender: req.userID, receiver : receiverID},
+                {sender : receiverID, receiver : req.userID}
+            ]
+        });
+
+        if(request) return res.status(400).send({message:"Request already sent...", success : false});
+
+        await Request.create({
+            sender: req.userID,
+            receiver : receiverID,
+        })
+
+        emitEvent(req, NEW_REQUEST, [receiverID]);
+
+        return res.status(200).send({message: "Friend request sent successfully...", success : true});
+
+    } catch (error) {
+        next(error);
+    }
+
+}
+
+
+// accept friend Request
+module.exports.acceptsFriendRequest = async (req,res,next)=>{
+    const {requestID,accept} = req.body;
+    try {
+        // find request 
+        const request = await Request.findById(requestID).populate("sender","name").populate("receiver","name");
+
+        if(!request) return res.status(404).send({message: "Request not found!!!",success: false});
+
+        if(request.receiver.toString() !== req.userID.toString())return res.status(400).send({message:"You are not authorized to accept this request...", success: false})
+        
+        if(!accept){
+            await request.deleteOne();
+            return res.status(200).send({message: "Friend Request Rejected...",success : true});
+        } 
+
+        const members = [request.sender._id,request.receiver._id];
+
+        let name = req.userID.toString() === request.receiver._id.toString() ? request.sender.name : request.receiver.name;
+
+        await Promise.all([Chat.create({members, name}), request.deleteOne()])
+
+        emitEvent(req, REFETCH_CHAT, members);
+
+        return res.status(200).send({message:"Friend Request Accepted...", success : true, senderID : request.sender._id})
+
     } catch (error) {
         next(error);
     }

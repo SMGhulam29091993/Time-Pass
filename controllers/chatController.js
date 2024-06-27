@@ -84,8 +84,8 @@ module.exports.getGroupChat = async (req,res,next)=>{
 module.exports.addMembers = async (req,res,next)=>{
     const {chatID, members} = req.body;
     try {
-        if(!members || members.length < 1) return res.status(400)
-                                                        .send({message:"Please provide members...", success: false})
+        // if(!members || members.length < 1) return res.status(400)
+        //                                                 .send({message:"Please provide members...", success: false})
 
         const chat = await Chat.findById(chatID);
         if (!chat){
