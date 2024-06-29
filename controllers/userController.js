@@ -181,3 +181,37 @@ module.exports.getNotifications = async (req,res,next)=>{
         next(error);
     }
 }
+
+
+// get my friends
+module.exports.getMyFriends = async (req,res,next)=>{
+    const chatID = req.query.chatID;
+    try {
+        const chats = await Chat.find({members : req.userID, groupChat : false}).populate("members","name avatar");
+        
+        const myFriends = chats.map(({members})=>{
+            const otherUser = members.find((member)=>member._id.toString() !== req.userID.toString());
+            
+            return {
+                _id: otherUser._id,
+                name : otherUser.name,
+                avatar : otherUser.avatar?otherUser.avatar.url: null,
+            }
+        });
+
+        console.log("Friends: ", myFriends);
+
+        if(chatID){
+            const chat = await Chat.findById(chatID);
+
+            // the below code will filter out all the other firends available except the one in chat
+            const availableFriends = myFriends.filter((friend)=>!chat.members.includes(friend._id));
+
+            return res.status(200).send({message : "Your availale friend list...",success : true, friends : availableFriends});
+        }else{
+            return res.status(200).send({message: "Your friend List...", success: true, friends : myFriends})
+        }
+    } catch (error) {
+        next(error);
+    }
+}

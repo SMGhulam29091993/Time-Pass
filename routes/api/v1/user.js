@@ -15,6 +15,7 @@ router.get("/search", isAuthenticated, userController.searchUser);
 router.put("/sendFriendRequest", isAuthenticated, friendRequestValidator(),validateHandler, userController.sendFriendRequst);
 router.put("/acceptFriendRequest", isAuthenticated, acceptFriendRequestValidator(),validateHandler, userController.acceptsFriendRequest);
 router.get("/notifications", isAuthenticated, userController.getNotifications);
+router.get("/friends", isAuthenticated, userController.getMyFriends);
 
 
 module.exports = router;
