@@ -195,11 +195,9 @@ module.exports.getMyFriends = async (req,res,next)=>{
             return {
                 _id: otherUser._id,
                 name : otherUser.name,
-                avatar : otherUser.avatar?otherUser.avatar.url: null,
+                avatar : otherUser.avatar.url,
             }
         });
-
-        console.log("Friends: ", myFriends);
 
         if(chatID){
             const chat = await Chat.findById(chatID);

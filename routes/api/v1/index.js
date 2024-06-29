@@ -4,6 +4,7 @@ const router = express.Router();
 
 router.use("/user", require("./user.js"));
 router.use("/chat", require("./chat.js"));
+router.use("/admin", require("./admin.js"));
 
 
 router.get("/test", (req,res,next)=>{
