@@ -60,3 +60,54 @@ module.exports.getAllChats = async (req,res,next)=>{
         next(error);
     }
 }
+
+// get all messages data for admin dashboard
+module.exports.getAllMessages = async (req,res,next)=>{
+    try {
+        const messages = await Message.find({}).populate("sender","name avatar").populate("chat", "name groupChat");
+        
+        const transformedMessages = messages.map(({_id, sender, attachments, content, createdAt, chat})=>{
+            return {
+                _id, attachments,content,createdAt,
+                sender : {
+                    _id: sender._id,
+                    name: sender.name,
+                    avatar : sender.avatar.url,
+                },
+                chat : {
+                    _id : chat._id,
+                    groupChat : chat.groupChat,
+                }
+            }
+        });
+        
+        return res.status(200).send({message: "Here are all the messages...", success: true, messages : transformedMessages});
+    } catch (error) {
+        next(error);
+    }
+}
+
+// get all stats number for the admin dashboard
+module.exports.getStats = async (req,res,next)=>{
+    try {
+        const [groupChatsCount, usersCount, messagesCount, totalChatsCount] = await Promise.all(
+            [
+                Chat.countDocuments({groupChat : true}),
+                User.countDocuments(),
+                Message.countDocuments(),
+                Chat.countDocuments()
+            ]
+        );
+
+        const stats = {
+            groupChatsCount,
+            usersCount,
+            messagesCount,
+            totalChatsCount,
+        };
+
+        return res.status(200).send({message :"Here are your app stats...", success : true, stats});
+    } catch (error) {
+        next(error);
+    }
+}

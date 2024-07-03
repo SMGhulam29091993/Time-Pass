@@ -19,8 +19,9 @@ router.get("/allUsers", adminController.getAllUsers);
 router.get("/getChats", adminController.getAllChats);
 
 // get messages data
+router.get("/getAllMessages", adminController.getAllMessages);
 
 // get stats
-
+router.get("/getStats", adminController.getStats);
 
 module.exports = router;
