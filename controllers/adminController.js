@@ -98,12 +98,30 @@ module.exports.getStats = async (req,res,next)=>{
                 Chat.countDocuments()
             ]
         );
+        const today = new Date();
+
+        const last7Days = new Date();
+        last7Days.setDate(last7Days.getDate()-7);
+
+        const last7DaysMessages = await Message.find({createdAt : {$gte : last7Days, $lte : today}}).select("createdAt");
+        const dayInMillisecond = 1000*60*60*24;
+
+        const messagesArray = new Array(7).fill(0);
+        
+        last7DaysMessages.forEach(message=>{
+            const index = Math.floor((today.getTime() - message.createdAt.getTime()) / dayInMillisecond);
+            if (index < 7){
+                messagesArray[6-index]++;
+            }
+            
+        })
 
         const stats = {
             groupChatsCount,
             usersCount,
             messagesCount,
             totalChatsCount,
+            messageChart : messagesArray,
         };
 
         return res.status(200).send({message :"Here are your app stats...", success : true, stats});
