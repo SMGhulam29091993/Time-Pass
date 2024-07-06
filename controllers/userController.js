@@ -10,11 +10,15 @@ const { NEW_REQUEST, REFETCH_CHAT } = require("../constants/event.js");
 module.exports.registerUser = async (req, res, next) => {
     const { email, password, ...rest } = req.body;
     try {
+
         // Check if the user already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(409).send({ message: "User already exists!", success: false });
         }
+        const file = req.file;
+
+        if(!file)return res.status(400).send({message : "Please upload avatar...", success : false})
 
         // Hash the password
         const hashedPassword = await bcryptjs.hash(password, 10);

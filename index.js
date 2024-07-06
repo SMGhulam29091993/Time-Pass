@@ -43,5 +43,5 @@ app.listen(PORT, (err)=>{
     if(err){
         console.log("Error in running the server : ".bgRed, err);
     }
-    console.log(`The server is up and running on port: ${PORT}`.bgGreen);
+    console.log(`The server is up and running on port: ${PORT} in ${process.env.NODE_ENV.trim()} mode`.bgGreen);
 })

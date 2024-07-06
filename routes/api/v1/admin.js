@@ -10,7 +10,6 @@ const router = express.Router();
 // get admin data
 router.get("/", adminAuthenticated, adminController.getAdminData);
 
-
 // admin verify
 router.post("/admin-login", adminLoginValidator(), validateHandler,adminController.adminCreateSession)
 

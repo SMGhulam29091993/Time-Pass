@@ -223,6 +223,8 @@ module.exports.sendAttachments = async (req,res,next)=>{
         const files = req.files || [];
 
         if(files.length < 1) return res.status(400).send({message:"No attachments found...", success: false});
+        
+        if(files.length > 5) return res.status(400).send({message:"Cannot upload more than 5...", success: false});
 
         const attachments = [];
 
