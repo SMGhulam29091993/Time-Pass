@@ -16,3 +16,11 @@ module.exports.emitEvent = (req,event,users,data)=>{console.log("Emitting event"
 module.exports.deleteFilesFromCloudinary = async (public_id)=>{
     // this function files or attachments from cloudinary
 }
+
+
+// get Socket ID that are connected with userID in userSocketIDs map
+module.exports.getSocket = (users=[])=>{
+    const socketID = users.map(user=>userSocketIDs.get(user._id.toString()));
+
+    return socketID;
+}
