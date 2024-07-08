@@ -5,6 +5,7 @@ const Request = require("../model/requestModel.js");
 const {sendToken, emitEvent} = require("../utils/features.js");
 const { cookieOptions } = require("../constants/constants.js");
 const { NEW_REQUEST, REFETCH_CHAT } = require("../constants/event.js");
+const QRCode = require("qrcode");
 
 // user register
 module.exports.registerUser = async (req, res, next) => {
@@ -23,11 +24,20 @@ module.exports.registerUser = async (req, res, next) => {
         // Hash the password
         const hashedPassword = await bcryptjs.hash(password, 10);
 
+
+
         // Create a new user with the hashed password
         const user = await User.create({ ...rest, email, password: hashedPassword });
 
         // Send a success response
         if (user) {
+
+            // below code will generate user profile qr URL and store it db
+            const userProfileURL = `https://timepass.com/myProfile/${user._id}`;
+            const qrDetailURL = await QRCode.toDataURL(userProfileURL);
+            user.qrCode = qrDetailURL;
+            await user.save();
+
             return res.status(201).send({ message: "User registered successfully", success: true, user });
         }
     } catch (error) {
