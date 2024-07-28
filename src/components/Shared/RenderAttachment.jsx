@@ -11,7 +11,7 @@ const RenderAttachment = (file, url) => {
         return <img src={transformImage(url,200)} alt='Attachment' width={"200px"} height={'150px'} 
                 style={{objectFit: "contain"}}/>
        
-    case "Video":
+    case "Audio":
         return <Audio src={url} preload="none" controls />
         
     default:

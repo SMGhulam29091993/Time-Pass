@@ -89,6 +89,7 @@ export const dashBoardData = {
         {
             avatar : ["https://www.freeiconspng.com/thumbs/profile-icon-png/profile-icon-9.png"],
             name : "John Doe",
+            email : "johnDoe@gmail.com",
             _id : "1",
             username:"john_doe",
             friends : 20,
@@ -97,6 +98,7 @@ export const dashBoardData = {
         {
             avatar : ["https://www.freeiconspng.com/thumbs/profile-icon-png/profile-icon-9.png"],
             name : "Pankhuri Tripathi",
+            email : "pankhuri_tripathi@gmail.com",
             _id : "2",
             username:"tripathi_pankhuri",
             friends : 22,

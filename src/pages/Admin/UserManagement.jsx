@@ -27,6 +27,12 @@ const columns = [
     width:200,
   },
   {
+    field: "email",
+    headerName : "Email",
+    headerClassName :"table-header",
+    width : 200
+  },
+  {
     field: "username",
     headerName:"Username",
     headerClassName : "table-header",
@@ -50,7 +56,7 @@ const UserManagement = () => {
   const [rows, setRows] = useState([]);
 
   useEffect(()=>{
-    setRows(dashBoardData.users.map((user)=>({...user, id:user._id, avatar:transformImage(user.avatar[0], 50)})))
+    setRows(dashBoardData.users.map((user)=>({...user, id:user._id,  avatar:transformImage(user.avatar[0], 50)})))
   },[])
 
   return (

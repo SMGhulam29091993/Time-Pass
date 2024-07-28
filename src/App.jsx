@@ -1,6 +1,7 @@
-import React,{Suspense, lazy} from 'react';
+import React,{Suspense, lazy, useEffect} from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import PrivateRoute from './components/Auth/PrivateRoute';
+import axios from "axios";
 
 
 const Home = lazy(()=>import("./pages/Home"));
@@ -19,6 +20,11 @@ const MessageManagement = lazy(()=>import("./pages/Admin/MessageManagement"));
 const user = true;
 
 const App = () => {
+
+  useEffect(()=>{
+    axios.get(``)
+  },[])
+
   return (
     <>
       <BrowserRouter>
