@@ -69,6 +69,7 @@ module.exports.createSession = async (req,res,next)=>{
 // get user profile controller
 module.exports.getProfile = async (req,res,next)=>{
     const {userID} = req.params;
+    console.log("userID",userID);
     try {
         if (userID !== req.userID){
             return res.status(404).send({message: "User not authenticated...", success: false});

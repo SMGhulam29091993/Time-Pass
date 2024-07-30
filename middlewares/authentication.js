@@ -11,7 +11,6 @@ module.exports.isAuthenticated = async (req,res,next)=>{
             return res.status(402).send({message :"User not authenticated...", success : false});
         }
         const decodedUser = jwt.verify(token, process.env.JWT_SECRET);
-        // console.log("DecodeUser : ", decodedUser);
         req.userID = decodedUser._id;
 
         next();

@@ -39,7 +39,12 @@ const userSocketIDs = new Map();
 
 
 // middleware for the app
-app.use(cors())
+app.use(cors(
+    {
+        options: ["http://localhost:5173","http://localhost:4173",process.env.CLIENT_URL],
+        credentials : true
+    }
+))
 app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(express.json());
