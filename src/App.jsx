@@ -3,6 +3,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import PrivateRoute from './components/Auth/PrivateRoute';
 import axios from "axios";
 import { server } from "./constants/config";
+import { useDispatch, useSelector } from "react-redux";
+import { userNotExists } from './redux/reducers/auth,js';
+import { authSelector } from './redux/reducers/auth,js';
 
 
 const Home = lazy(()=>import("./pages/Home"));
@@ -18,9 +21,12 @@ const UserManagement = lazy(()=>import("./pages/Admin/UserManagement"));
 const ChatManagement = lazy(()=>import("./pages/Admin/ChatManagement"));
 const MessageManagement = lazy(()=>import("./pages/Admin/MessageManagement"));
 
-const user = true;
-const _id = "664c835a079f04dc66c07ca6"
+const user = false;
+
 const App = () => {
+
+  const {user, loader} = useSelector(authSelector());
+  const dispatch = useDispatch();;
 
   useEffect(()=>{
     const fetchUser = async ()=>{
@@ -28,19 +34,19 @@ const App = () => {
         const response = await axios.get(`${server}/user/getProfile/${_id}`);
         console.log(response);
       } catch (error) {
-        console.log(error)
+        dispatch(userNotExists())
       }
       
     } 
     fetchUser();
   },[])
 
-  return (
+  return loader?(<LayoutLoaders/>) : (
     <>
       <BrowserRouter>
         <Suspense fallback={<LayoutLoaders/>}>
           <Routes>
-            <Route element={<PrivateRoute user={user} redirect={"/login"}/>} >
+            <Route element={<PrivateRoute user={user} />} >
               <Route path="/" element={<Home/>} />
               <Route path="/chat/:chatID" element={<Chat/>} />
               <Route path="/groups" element={<Groups/>} />
