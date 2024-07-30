@@ -2,6 +2,7 @@ import React,{Suspense, lazy, useEffect} from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import PrivateRoute from './components/Auth/PrivateRoute';
 import axios from "axios";
+import { server } from "./constants/config";
 
 
 const Home = lazy(()=>import("./pages/Home"));
@@ -18,11 +19,20 @@ const ChatManagement = lazy(()=>import("./pages/Admin/ChatManagement"));
 const MessageManagement = lazy(()=>import("./pages/Admin/MessageManagement"));
 
 const user = true;
-
+const _id = "664c835a079f04dc66c07ca6"
 const App = () => {
 
   useEffect(()=>{
-    axios.get(``)
+    const fetchUser = async ()=>{
+      try {
+        const response = await axios.get(`${server}/user/getProfile/${_id}`);
+        console.log(response);
+      } catch (error) {
+        console.log(error)
+      }
+      
+    } 
+    fetchUser();
   },[])
 
   return (
