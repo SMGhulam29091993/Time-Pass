@@ -4,8 +4,8 @@ import PrivateRoute from './components/Auth/PrivateRoute';
 import axios from "axios";
 import { server } from "./constants/config";
 import { useDispatch, useSelector } from "react-redux";
-import { userNotExists } from './redux/reducers/auth,js';
-import { authSelector } from './redux/reducers/auth,js';
+import { authSelector, userNotExists } from './redux/reducers/auth';
+
 
 
 const Home = lazy(()=>import("./pages/Home"));
@@ -21,12 +21,13 @@ const UserManagement = lazy(()=>import("./pages/Admin/UserManagement"));
 const ChatManagement = lazy(()=>import("./pages/Admin/ChatManagement"));
 const MessageManagement = lazy(()=>import("./pages/Admin/MessageManagement"));
 
-const user = false;
+// const user = true;
 
 const App = () => {
 
-  const {user, loader} = useSelector(authSelector());
-  const dispatch = useDispatch();;
+  const {user, loader} = useSelector(authSelector);
+  console.log(`User in from auth : ${user}`)
+  const dispatch = useDispatch();
 
   useEffect(()=>{
     const fetchUser = async ()=>{
@@ -46,7 +47,7 @@ const App = () => {
       <BrowserRouter>
         <Suspense fallback={<LayoutLoaders/>}>
           <Routes>
-            <Route element={<PrivateRoute user={user} />} >
+            <Route element={<PrivateRoute user={user} redirect={"/login"} />} >
               <Route path="/" element={<Home/>} />
               <Route path="/chat/:chatID" element={<Chat/>} />
               <Route path="/groups" element={<Groups/>} />
