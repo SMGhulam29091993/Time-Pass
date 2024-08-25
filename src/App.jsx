@@ -5,6 +5,7 @@ import axios from "axios";
 import { server } from "./constants/config";
 import { useDispatch, useSelector } from "react-redux";
 import { authSelector, userNotExists } from './redux/reducers/auth';
+import { Toaster } from "react-hot-toast";
 
 
 
@@ -63,6 +64,7 @@ const App = () => {
             <Route path="*" element={<NotFound/>} />
           </Routes>
         </Suspense>
+        <Toaster position='bottom-center' />
       </BrowserRouter>
     </>
   )

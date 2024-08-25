@@ -4,6 +4,11 @@ import {CameraAlt as CameraAltIcon} from "@mui/icons-material"
 import { VisuallyHiddenInput } from '../components/styles/StyledComponents';
 import { useFileHandler, useInputValidation, useStrongPassword } from "6pp";
 import { UsernameValidator } from '../utils/validator';
+import axios from "axios";
+import { config, server } from '../constants/config';
+import { useDispatch } from "react-redux";
+import { userExists } from '../redux/reducers/auth';
+import toast from 'react-hot-toast';
 
 const Login = () => {
     const [isLogin, setIsLogin] = useState(true);
@@ -18,12 +23,43 @@ const Login = () => {
 
     const avatar = useFileHandler("single");
 
-    const handleLogin = (e)=>{
+    const dispatch = useDispatch();
+
+    const handleLogin = async (e)=>{
         e.preventDefault()
+
+        const userData = {
+            email : email.value,
+            password : password.value
+        };
+
+        try {
+            const {data} = await axios.post(`${server}/api/v1/user/login-user`,userData,config);
+            console.log(data);
+            
+            if(!data.success){
+                toast.error(error?.response?.data?.message || "Something went wrong please try after sometime.")
+                return;
+            }
+            dispatch(userExists(true));
+            toast.success(data.message);
+        } catch (error) {
+            console.log(`Login Error : ${error}`);
+            toast.error(error?.response?.data?.message || "Something went wrong please try after sometime.");
+        }
     }
 
     const handleRegister = (e)=>{
         e.preventDefault();
+
+        const formData = new formData();
+        formData.append("avatar", avatar.file);
+        formData.append("name", name.value);
+        formData.append("username", username.value);
+        formData.append("email", email.value);
+        formData.append("password", password.value);
+        formData.append("bio",bio.value);
+
     }
 
   return (
