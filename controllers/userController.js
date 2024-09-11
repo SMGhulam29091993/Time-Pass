@@ -2,14 +2,18 @@ const bcryptjs = require("bcryptjs");
 const User = require("../model/userModel.js");
 const Chat = require("../model/chatModel.js");
 const Request = require("../model/requestModel.js");
-const {sendToken, emitEvent} = require("../utils/features.js");
+const {sendToken, emitEvent, uploadFilesToCloudiary, otpGenerator} = require("../utils/features.js");
 const { cookieOptions } = require("../constants/constants.js");
 const { NEW_REQUEST, REFETCH_CHAT } = require("../constants/event.js");
 const QRCode = require("qrcode");
+const emailVerification = require("../lib/nodemailer.js");
+const {generate} = require("otp-generator");
 
 // user register
 module.exports.registerUser = async (req, res, next) => {
     const { email, password, ...rest } = req.body;
+    console.log(req.body.name);
+
     try {
 
         // Check if the user already exists
@@ -17,20 +21,40 @@ module.exports.registerUser = async (req, res, next) => {
         if (existingUser) {
             return res.status(409).send({ message: "User already exists!", success: false });
         }
-        const file = req.file;
 
-        if(!file)return res.status(400).send({message : "Please upload avatar...", success : false})
+        // cloudinary logic for uploading file
+        const file = req.file;
+        if (!file) {
+            return res.status(400).json({ message: "Please upload an avatar.", success: false });
+        }
+
+        const result = await uploadFilesToCloudiary(file);
+
+        const avatar = {
+            public_id : result[0].public_id,
+            url : result[0].url,
+        };
 
         // Hash the password
         const hashedPassword = await bcryptjs.hash(password, 10);
 
+        
 
+        const receiver_name = req.body.name;
+        const receiver_email = email;
 
         // Create a new user with the hashed password
-        const user = await User.create({ ...rest, email, password: hashedPassword });
+        const user = await User.create({ ...rest, email,avatar, password: hashedPassword });
 
+        // generate otp
+        const otp = generate(6,{digits: true, specialChars: true,lowerCaseAlphabets:true})
+
+        user.otp = otp;
+        await user.save();
+
+        
         // Send a success response
-        if (user) {
+        if (user) {          
 
             // below code will generate user profile qr URL and store it db
             const userProfileURL = `https://timepass.com/myProfile/${user._id}`;
@@ -38,12 +62,36 @@ module.exports.registerUser = async (req, res, next) => {
             user.qrCode = qrDetailURL;
             await user.save();
 
+            await emailVerification(receiver_name, receiver_email,otp);
+            
             return res.status(201).send({ message: "User registered successfully", success: true, user });
         }
+        
     } catch (error) {
         next(error);
     }
 };
+
+// getotp controller
+module.exports.getOTP = async (req, res, next) => {
+    
+    try {
+        // Find user by ID and select only the 'otp' field
+        const userOTP = await User.findById(req.params.id)
+        // Check if userOTP exists
+        if (!userOTP) {
+            return res.status(404).send({ message: "No OTP found for the provided ID", success: false });
+        }
+
+        return res.status(200).send({ message: "Here is your OTP", success: true, otp: userOTP.otp });
+    } catch (error) {
+        console.error("Error retrieving OTP:", error);
+        return res.status(500).send({ message: "Server error", success: false });
+    }
+};
+
+
+// email verification controller
 
 
 // user login controller
@@ -55,7 +103,8 @@ module.exports.createSession = async (req,res,next)=>{
             return res.status(202).send({message:"User not registered.!!!", success: false});
         }
         const isPasswordValid = await bcryptjs.compare(password,user.password);
-        if (!isPasswordValid) {
+        console.log(`Password valid: ${isPasswordValid}`);
+        if(!isPasswordValid){
             return res.status(401).send({ message: "Invalid email/password.", success: false });
         }
         

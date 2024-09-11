@@ -16,6 +16,7 @@ router.put("/sendFriendRequest", isAuthenticated, friendRequestValidator(),valid
 router.put("/acceptFriendRequest", isAuthenticated, acceptFriendRequestValidator(),validateHandler, userController.acceptsFriendRequest);
 router.get("/notifications", isAuthenticated, userController.getNotifications);
 router.get("/friends", isAuthenticated, userController.getMyFriends);
+router.get("/get-otp/:id", userController.getOTP);
 
 
 module.exports = router;

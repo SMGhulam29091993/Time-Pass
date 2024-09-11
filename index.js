@@ -11,9 +11,11 @@ const {Server} = require("socket.io");
 const { v4: uuidv4 } = require('uuid');
 const { NEW_MESSAGE, NEW_MESSAGE_ALERT } = require("./constants/event.js");
 const { getSocket } = require("./utils/features.js");
+const {v2 : cloudinary}  = require("cloudinary");
 
 const Message = require("./model/messageModel.js");
 
+// below created fakedata
 // const { createUser } = require("./seeders/user.js");
 // const { createSampleChats, createSampleGroupChats } = require("./seeders/chat.js");
 // const { createMessageInAChat } = require("./seeders/message.js");   
@@ -21,10 +23,19 @@ const Message = require("./model/messageModel.js");
 
 const db = require("./config/mongoose.js"); //connecting with database
 
+// below created fakedata
 // createUser(10);
 // createSampleChats(10);
 // createSampleGroupChats(10);
 // createMessageInAChat("667095050ede9d0afa1c19a2",50);
+
+
+// cloudinary initialization
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key : process.env.CLOUDINARY_API_KEY,
+    api_secret : process.env.CLOUDINARY_API_SECRET
+});
 
 const app = express();
 const server = createServer(app);
@@ -39,12 +50,23 @@ const userSocketIDs = new Map();
 
 
 // middleware for the app
-app.use(cors(
-    {
-        options: ["http://localhost:5173","http://localhost:4173",process.env.CLIENT_URL],
-        credentials : true
-    }
-))
+
+const allowOrigin = ["http://localhost:5173","http://localhost:4173",process.env.CLIENT_URL];
+
+const corsOptions = {
+    origin : (origin,callback)=>{
+        if(allowOrigin.indexOf(origin) !== -1 || !origin){
+            callback(null, true);
+        }else{
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+    credentials : true,
+};
+
+app.use(cors(corsOptions));
+
+
 app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(express.json());
@@ -110,7 +132,7 @@ io.on("connection",(socket)=>{
 })
 
 // router
-app.use("/", require("./routes/api/v1/index.js"));
+app.use("/", require("./routes/index.js"));
 
 
 server.listen(PORT, (err)=>{
