@@ -1,19 +1,22 @@
-import React, { useState } from 'react';
-import { Avatar, Button, Container, IconButton, Paper, Stack, TextField, Typography } from "@mui/material";
-import {CameraAlt as CameraAltIcon} from "@mui/icons-material"
-import { VisuallyHiddenInput } from '../components/styles/StyledComponents';
 import { useFileHandler, useInputValidation, useStrongPassword } from "6pp";
-import { UsernameValidator } from '../utils/validator';
+import { CameraAlt as CameraAltIcon } from "@mui/icons-material";
+import { Avatar, Button, Container, IconButton, Paper, Stack, TextField, Typography } from "@mui/material";
 import axios from "axios";
-import { config, server } from '../constants/config';
-import { useDispatch } from "react-redux";
-import { userExists } from '../redux/reducers/auth';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { useDispatch } from "react-redux";
+import { VisuallyHiddenInput } from '../components/styles/StyledComponents';
+import { config, server } from '../constants/config';
+import { userExists } from '../redux/reducers/auth';
+import { UsernameValidator } from '../utils/validator';
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
     const [isLogin, setIsLogin] = useState(true);
 
     const toggleLogin =()=>setIsLogin(!isLogin);
+
+    const navigate = useNavigate();
 
     const name = useInputValidation("");
     const email= useInputValidation("")
@@ -38,7 +41,7 @@ const Login = () => {
             console.log(data);
             
             if(!data.success){
-                toast.error(error?.response?.data?.message || "Something went wrong please try after sometime.")
+                toast.error(data?.response?.data?.message || "Something went wrong please try after sometime.")
                 return;
             }
             dispatch(userExists(true));
@@ -49,10 +52,10 @@ const Login = () => {
         }
     }
 
-    const handleRegister = (e)=>{
+    const handleRegister = async (e)=>{
         e.preventDefault();
 
-        const formData = new formData();
+        const formData = new FormData();
         formData.append("avatar", avatar.file);
         formData.append("name", name.value);
         formData.append("username", username.value);
@@ -60,6 +63,31 @@ const Login = () => {
         formData.append("password", password.value);
         formData.append("bio",bio.value);
 
+       // Log the formData key-value pairs
+        for (let pair of formData.entries()) {
+            console.log(pair[0], pair[1]);
+        }
+        
+
+        try {
+            const {data} = await axios.post(`${server}/api/v1/user/register`,formData, {
+                headers : {
+                    "Content-Type" : "multipart/form-data"
+                },
+                withCredentials : true
+            });
+            if (!data.success){
+                toast.error(data?.response?.data?.message || "Something went wrong please try after sometime.");
+                return; 
+            }
+            // dispatch(userExists(true))
+            // toast.success(data.message);
+            navigate(`/verification-page/${data.user._id}`)
+
+        } catch (error) {
+            toast.error(error?.response?.data?.message || "Something went wrong please try after sometime.");
+            return; 
+        }
     }
 
   return (
@@ -112,7 +140,7 @@ const Login = () => {
                                                     component="label">
                                         <>
                                             <CameraAltIcon />
-                                            <VisuallyHiddenInput type='file' onChange={avatar.changeHandler} />
+                                            <VisuallyHiddenInput type='file' accept='image/.*' onChange={avatar.changeHandler} />
                                         </>
                                     </IconButton>
                                 </Stack>

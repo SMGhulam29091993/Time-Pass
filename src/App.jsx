@@ -1,4 +1,4 @@
-import React,{Suspense, lazy, useEffect} from 'react';
+import {Suspense, lazy, useEffect} from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import PrivateRoute from './components/Auth/PrivateRoute';
 import axios from "axios";
@@ -21,6 +21,8 @@ const AdminDashboard = lazy(()=>import("./pages/Admin/AdminDashboard"));
 const UserManagement = lazy(()=>import("./pages/Admin/UserManagement"));
 const ChatManagement = lazy(()=>import("./pages/Admin/ChatManagement"));
 const MessageManagement = lazy(()=>import("./pages/Admin/MessageManagement"));
+const VerificationPage = lazy(()=>import("./pages/VerificationPage"));
+
 
 // const user = true;
 
@@ -53,6 +55,9 @@ const App = () => {
               <Route path="/chat/:chatID" element={<Chat/>} />
               <Route path="/groups" element={<Groups/>} />
             </Route>
+            <Route path="/verification-page/:userID" element={<PrivateRoute user={!user} redirect={"/"}>
+                                                                        <VerificationPage />
+                                                                  </PrivateRoute>} />
             <Route path="/login" element={<PrivateRoute user={!user} redirect={"/"}><Login/></PrivateRoute>} />
 
             <Route path='/admin' element={<AdminLogin/>} />
