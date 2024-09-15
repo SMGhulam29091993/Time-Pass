@@ -39,13 +39,15 @@ const VerificationPage = () => {
 
     const handleVerification = async (e) => {
         e.preventDefault();
-        if(otp === userOTP){
-            setTimeout(setVerifying(true), 2000);
-            toast.success("Email Verified!!!");
+        setVerifying(true)
+        if(otp !== userOTP){
+            
+            toast.error("Otp did not match")
+                     
         }
-        setVerifying(false);
-        
-        dispatch(userExists(true));
+        toast.success("Email Verified!!!");
+        setVerifying(false);  
+        dispatch(userExists(true));        
     }
 
     return (
@@ -73,12 +75,12 @@ const VerificationPage = () => {
                                 label="OTP"
                                 margin='normal'
                                 value={otp}
-                                onChange={(e) => setOtp(e.target.value)} // Corrected onChange handler
+                                onChange={(e) => setOtp(e.target.value)}
                                 variant='outlined'
                             />
 
                             <Button sx={{ marginTop: "1rem" }} variant='contained' color='primary' fullWidth type='submit'>
-                                {verifying? "Verifying... ": "Verify" }
+                                {verifying?"Verifying" : "Verify"}
                             </Button>
                         </form>
                     </Paper>

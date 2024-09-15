@@ -4,7 +4,7 @@ import PrivateRoute from './components/Auth/PrivateRoute';
 import axios from "axios";
 import { server } from "./constants/config";
 import { useDispatch, useSelector } from "react-redux";
-import { authSelector, userNotExists } from './redux/reducers/auth';
+import { authSelector, userExists, userNotExists } from './redux/reducers/auth';
 import { Toaster } from "react-hot-toast";
 
 
@@ -35,15 +35,19 @@ const App = () => {
   useEffect(()=>{
     const fetchUser = async ()=>{
       try {
-        const response = await axios.get(`${server}/user/getProfile/${_id}`);
-        console.log(response);
+        const {data} = await axios.get(`${server}/api/v1/user/getProfile/myProfile`, {withCredentials : true});
+        console.log(data);
+        if(!data.success){
+          dispatch(userNotExists());
+        }
+        dispatch(userExists(data.user))
+
       } catch (error) {
         dispatch(userNotExists())
-      }
-      
+      } 
     } 
     fetchUser();
-  },[])
+  },[dispatch])
 
   return loader?(<LayoutLoaders/>) : (
     <>
@@ -55,7 +59,7 @@ const App = () => {
               <Route path="/chat/:chatID" element={<Chat/>} />
               <Route path="/groups" element={<Groups/>} />
             </Route>
-            <Route path="/verification-page/:userID" element={<PrivateRoute user={!user} redirect={"/"}>
+            <Route path="/verification-page/:userID" element={<PrivateRoute user={!user} redirect={"/login"}>
                                                                         <VerificationPage />
                                                                   </PrivateRoute>} />
             <Route path="/login" element={<PrivateRoute user={!user} redirect={"/"}><Login/></PrivateRoute>} />

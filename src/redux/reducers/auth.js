@@ -13,12 +13,12 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         userExists : (state,action)=>{
-            state.user = action.payload,
-            state.loader = false
+            state.user = action.payload;
+            state.loader = false;
         },
         userNotExists : (state)=>{
-            state.user = null,
-            state.loader = false
+            state.user = null;
+            state.loader = false;
         },
     }
 })

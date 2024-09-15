@@ -38,7 +38,6 @@ const Login = () => {
 
         try {
             const {data} = await axios.post(`${server}/api/v1/user/login-user`,userData,config);
-            console.log(data);
             
             if(!data.success){
                 toast.error(data?.response?.data?.message || "Something went wrong please try after sometime.")
@@ -62,13 +61,7 @@ const Login = () => {
         formData.append("email", email.value);
         formData.append("password", password.value);
         formData.append("bio",bio.value);
-
-       // Log the formData key-value pairs
-        for (let pair of formData.entries()) {
-            console.log(pair[0], pair[1]);
-        }
-        
-
+     
         try {
             const {data} = await axios.post(`${server}/api/v1/user/register`,formData, {
                 headers : {

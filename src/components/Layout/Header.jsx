@@ -1,11 +1,21 @@
+import {
+  Add as AddIcon, Group as GroupIcon,
+  ExitToApp as LogoutIcon,
+  Menu as MenuIcon,
+  Notifications as NotificationIcon,
+  Search as SearchIcon
+} from '@mui/icons-material';
 import { AppBar, Backdrop, Box, IconButton, Toolbar, Tooltip, Typography } from '@mui/material';
-import React, { Suspense, lazy, startTransition, useState } from 'react';
-import { asparagus } from '../../constants/color';
-import { Menu as MenuIcon, Search as SearchIcon, Add as AddIcon, Group as GroupIcon,
-     Notifications as NotificationIcon , ExitToApp as LogoutIcon} from '@mui/icons-material';
+import { Suspense, lazy, startTransition, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { asparagus } from '../../constants/color';
+import {useDispatch} from "react-redux";
+import axios from "axios";
+import {server} from "../../constants/config";
+import toast from "react-hot-toast";
+import { userNotExists } from '../../redux/reducers/auth';
 
-
+ 
 const Search = lazy(()=>import("../specifics/Search"));
 const Notifications = lazy(()=>import("../specifics/Notifications"));
 const NewGroups = lazy(()=>import("../specifics/NewGroups"));
@@ -17,6 +27,8 @@ const Header = () => {
   const [isSearch,setIsSearch] = useState(false);
   const [isNewGroup, setIsNewGroup] = useState(false);
   const [isNotification, setIsNotification] = useState(false);
+
+  const dispatch = useDispatch();
 
 
   const handleMobile = ()=>{
@@ -38,8 +50,23 @@ const Header = () => {
       console.log("ManageGroup");
     })
   }
+  
+  const logoutHandler = async ()=>{
+    try {
+      const {data} = await axios.get(`${server}/api/v1/user/logout`, {withCredentials : true});
 
-  const logoutHandler = ()=>{};
+      if(!data.success){
+        toast.error(data?.message);
+      }
+
+      // setting user in redux as null to redirect to login page
+      dispatch(userNotExists());
+      toast.success(data.message);
+      
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Something Went Wrong!!!")
+    }
+  };
 
   return (
     <>
